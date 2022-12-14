@@ -19,6 +19,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - run: |
+          cd free-raoult
           npm install
           npm run build
       - name: Configure AWS Credentials
@@ -29,4 +30,4 @@ jobs:
           aws-region: eu-west-3
 
       - name: Deploy Content to S3 bucket
-        run: aws s3 sync ./dist s3://liberez-raoult --delete
+        run: aws s3 sync ./free-raoult/dist s3://liberez-raoult --delete
