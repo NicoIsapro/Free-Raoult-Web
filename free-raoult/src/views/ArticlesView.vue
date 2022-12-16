@@ -10,13 +10,13 @@
       <br>
       <div class="content-section implementation">
           <div class="card">
-              <DataView :value="products" :layout="layout" :paginator="true" :rows="9" :sortOrder="sortOrder" :sortField="sortField">
+              <DataView :value="articles" :layout="layout" :paginator="true" :rows="9" :sortOrder="sortOrder" :sortField="sortField">
                   <template #header>
                       <div class="grid grid-nogutter">
                           <div class="col-6" style="text-align: left">
                               <Dropdown v-model="sortKey" :options="sortOptions" optionLabel="label" placeholder="Trier par date" @change="onSortChange($event)" />
                           </div>
-                          <Button label="Nouvel article" icon="pi pi-plus" iconPos="right" />
+                          <Button @click="showNewArticleDialog = true" label="Nouvel article" icon="pi pi-plus" iconPos="right" />
                           <!-- <div class="col-6" style="text-align: right">
                               <DataViewLayoutOptions v-model="layout" />
                           </div> -->
@@ -72,13 +72,67 @@
           </div>
       </div>
   </div>
+  <Dialog
+    v-model:visible="showNewArticleDialog"
+    :style="{width: '450px'}"
+    header="Ajouter un nouvel article"
+    :modal="true"
+    class="p-fluid"
+  >
+    <div class="field">
+      <label for="title">Titre:</label>
+      <InputText
+        id="title"
+        v-model="article.title"
+        type="text"
+        required="true"
+        autofocus
+      />
+      <small
+        v-if="submitted && !article.title"
+        class="p-error"
+      >Un titre est requis</small>
+    </div>
+    <div class="field">
+      <label for="content">Contenu</label>
+      <InputText
+        v-model.trim="article.content"
+        type="text"
+        required="true"
+      />
+      <small
+        v-if="submitted && !article.content"
+        class="p-error"
+      >Un contenu est requis</small>
+    </div>
+    <div class="field">
+      <label for="tags">Tags</label>
+      <Chips v-model="article.tags" separator="," addOnBlur="true" allowDuplicate="true" />
+    </div>
+    <template #footer>
+      <Button
+        label="Annuler"
+        icon="pi pi-times"
+        class="p-button-text"
+        @click="showNewArticleDialog = false"
+      />
+      <Button
+        label="Ajouter"
+        icon="pi pi-check"
+        class="p-button-text"
+        @click="addNewArticleReq()"
+      />
+    </template>
+  </Dialog>
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
   data() {
       return {
-          products: [
+          articles: [
             {
               title: "Arrestation en cours",
               content: "Le fbi aurait....",
@@ -90,8 +144,15 @@ export default {
               tags: ["police", "daron"]
             }
           ],
+          article: {
+            title: null,
+            content: null,
+            tags: null
+          },
           layout: 'grid',
           sortKey: null,
+          submitted: false,
+          showNewArticleDialog: false,
           sortOrder: null,
           sortField: null,
           sortOptions: [
@@ -100,12 +161,43 @@ export default {
           ]
       };
   },
-  productService: null,
   created() {
+    this.getArticlesReq();
   },
   mounted() {
   },
   methods: {
+    showToast(level, title, content) {
+      this.$toast.add({ severity: level, summary: title, detail: content, life: 3000 });
+    },
+    getArticlesReq () {
+        axios
+          .get(import.meta.env.VITE_API_URL + '/dev/articles')
+          .then(response => {
+            this.articles = response.data;
+          })
+          .catch(error => console.log(error));
+      },
+      addNewArticleReq(){
+        this.submitted = true;
+        if (this.article.title && this.article.content) {
+          axios
+            .post(import.meta.env.VITE_API_URL + '/articles', this.article)
+            .then(response => {
+              if (response.status === 200) {
+                this.showNewArticleDialog = false;
+                this.getArticlesReq();
+                this.showToast('success', 'Successful', `L'article a ete ajoute avec succes`);
+              } else {
+                this.showToast('error', 'Error', 'Une erreur est survenue');
+              }
+            })
+            .catch(error => {
+                console.log(error);
+                this.showToast('error', 'Error', 'Une erreur est survenue');
+            });
+          }
+        },
       onSortChange(event) {
           const value = event.value.value;
           const sortValue = event.value;

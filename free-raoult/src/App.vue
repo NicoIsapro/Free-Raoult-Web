@@ -4,9 +4,7 @@ import { RouterLink, RouterView } from 'vue-router'
 
 <template>
   <header>
-    <div class="bg-bluegray-900 text-gray-100 p-3 flex justify-content-between lg:justify-content-center align-items-center flex-wrap">
-        <div class="font-bold mr-8">🔥 Libérez Raoult!</div>
-    </div>
+    <Message severity="warn">🔥 Une petition pour liberer Sebastien est en cours, allez signer ici</Message>
   </header>
 
   <RouterView />
