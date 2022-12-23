@@ -10,12 +10,18 @@
       <br>
       <div class="content-section implementation">
           <div class="card">
-              <DataView :value="articles" :layout="layout" :paginator="true" :rows="9" :sortOrder="sortOrder" :sortField="sortField">
+              <DataView v-model:filters="filters" :value="articles" :layout="layout" :paginator="true" :rows="9" :sortOrder="sortOrder" :sortField="sortField">
                   <template #header>
                       <div class="grid grid-nogutter">
                           <div class="col-6" style="text-align: left">
                               <Dropdown v-model="sortKey" :options="sortOptions" optionLabel="label" placeholder="Trier par date" @change="onSortChange($event)" />
                           </div>
+                          <span class="p-input-icon-left mr-2">
+                            <i class="pi pi-search" />
+                            <InputText
+                              placeholder="Recherche..."
+                            />
+                          </span>
                           <Button @click="showNewArticleDialog = true" label="Nouvel article" icon="pi pi-plus" iconPos="right" />
                           <!-- <div class="col-6" style="text-align: right">
                               <DataViewLayoutOptions v-model="layout" />
@@ -56,7 +62,8 @@
                                   <!-- <span :class="'product-badge status-' + slotProps.data.inventoryStatus.toLowerCase()">{{ slotProps.data.inventoryStatus }}</span> -->
                               </div>
                               <div class="product-grid-item-content">
-                                  <img :src="'demo/images/product/' + slotProps.data.image" :alt="slotProps.data.name" />
+                                  <!-- <img :src="'demo/images/product/' + slotProps.data.image" :alt="slotProps.data.name" /> -->
+                                  <img src="https://static.actu.fr/uploads/2022/08/sebastien-raoult.jpg"/>
                                   <div class="product-name">{{ slotProps.data.title }}</div>
                                   <div class="product-description">{{ slotProps.data.content }}</div>
                                   <!-- <Rating :modelValue="slotProps.data.rating" :readonly="true" :cancel="false"></Rating> -->
@@ -128,6 +135,7 @@
 
 <script>
 import axios from 'axios'
+import { FilterMatchMode, FilterOperator } from 'primevue/api';
 
 export default {
   data() {
@@ -174,7 +182,7 @@ export default {
         axios
           .get(import.meta.env.VITE_API_URL + '/dev/articles')
           .then(response => {
-            this.articles = response.data;
+            this.articles = response.data?.articles;
           })
           .catch(error => console.log(error));
       },
