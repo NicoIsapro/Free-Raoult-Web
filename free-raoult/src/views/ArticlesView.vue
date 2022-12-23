@@ -114,7 +114,7 @@
     </div>
     <div class="field">
       <label for="tags">Tags</label>
-      <Chips v-model="article.tags" separator="," addOnBlur="true" allowDuplicate="true" />
+      <Chips v-model="article.tags" separator="," addOnBlur="true" :allowDuplicate="false" />
     </div>
     <template #footer>
       <Button
@@ -140,18 +140,7 @@ import { FilterMatchMode, FilterOperator } from 'primevue/api';
 export default {
   data() {
       return {
-          articles: [
-            {
-              title: "Arrestation en cours",
-              content: "Le fbi aurait....",
-              tags: ["police", "daron"]
-            },
-            {
-              title: "Extradition vers les USA",
-              content: "Une extradition est en cours ",
-              tags: ["police", "daron"]
-            }
-          ],
+          articles: [],
           article: {
             title: null,
             content: null,
@@ -164,15 +153,13 @@ export default {
           sortOrder: null,
           sortField: null,
           sortOptions: [
-              { label: 'Plus recent', value: '!date' },
+              { label: 'Plus récent', value: '!date' },
               { label: 'Plus ancien', value: 'price' }
           ]
       };
   },
-  created() {
-    this.getArticlesReq();
-  },
   mounted() {
+    this.getArticlesReq();
   },
   methods: {
     showToast(level, title, content) {
@@ -190,12 +177,13 @@ export default {
         this.submitted = true;
         if (this.article.title && this.article.content) {
           axios
-            .post(import.meta.env.VITE_API_URL + '/articles', this.article)
+            .post(import.meta.env.VITE_API_URL + '/dev/articles', this.article)
             .then(response => {
+              console.log(response);
               if (response.status === 200) {
                 this.showNewArticleDialog = false;
                 this.getArticlesReq();
-                this.showToast('success', 'Successful', `L'article a ete ajoute avec succes`);
+                this.showToast('success', 'Successful', `L'article a été ajouté avec succès`);
               } else {
                 this.showToast('error', 'Error', 'Une erreur est survenue');
               }
