@@ -43,7 +43,7 @@
                               </div>
                               <div class="product-list-action">
                                   <!-- <span class="product-price">${{ slotProps.data.price }}</span> -->
-                                  <Button icon="pi pi-shopping-cart" label="View"></Button>
+                                  <Button @click="$router.push({ path: `/article/${slotProps.data.id}` })" icon="pi pi-shopping-cart" label="View"></Button>
                               </div>
                           </div>
                       </div>
@@ -114,7 +114,7 @@
     </div>
     <div class="field">
       <label for="tags">Tags</label>
-      <Chips v-model="article.tags" separator="," addOnBlur="true" :allowDuplicate="false" />
+      <Chips v-model="article.tags" separator="," :addOnBlur="true" :allowDuplicate="false" />
     </div>
     <template #footer>
       <Button
@@ -179,7 +179,6 @@ export default {
           axios
             .post(import.meta.env.VITE_API_URL + '/dev/articles', this.article)
             .then(response => {
-              console.log(response);
               if (response.status === 200) {
                 this.showNewArticleDialog = false;
                 this.getArticlesReq();
