@@ -10,7 +10,7 @@
       <br>
       <div class="content-section implementation">
           <div class="card">
-              <DataView v-model:filters="filters" :value="articles" :layout="layout" :paginator="true" :rows="9" :sortOrder="sortOrder" :sortField="sortField">
+              <DataView v-model:filters="filters" :value="articles" :layout="layout" :paginator="true" :rows="6" :sortOrder="sortOrder" :sortField="sortField">
                   <template #header>
                       <div class="grid grid-nogutter">
                           <div class="col-6" style="text-align: left">
@@ -29,34 +29,14 @@
                       </div>
                   </template>
 
-                  <template #list="slotProps">
-                      <div class="col-12">
-                          <div class="product-list-item">
-                              <!-- <img :src="'demo/images/product/' + slotProps.data.image" :alt="slotProps.data.title" /> -->
-                              <div class="product-list-detail">
-                                  <div class="product-name">{{ slotProps.data.title }}</div>
-                                  <div class="product-description">{{ slotProps.data.content }}</div>
-                                  <i class="pi pi-tag product-category-icon"></i>
-                                  <span class="product-category" v-for="tag in slotProps.data.tags">
-                                    {{ tag }}
-                                  </span>
-                              </div>
-                              <div class="product-list-action">
-                                  <!-- <span class="product-price">${{ slotProps.data.price }}</span> -->
-                                  <Button @click="$router.push({ path: `/article/${slotProps.data.id}` })" icon="pi pi-shopping-cart" label="View"></Button>
-                              </div>
-                          </div>
-                      </div>
-                  </template>
-
                   <template #grid="slotProps">
                       <div class="col-12 md:col-4">
                           <div class="product-grid-item card">
                               <div class="product-grid-item-top">
                                   <div>
                                       <i class="pi pi-tag product-category-icon"></i>
-                                      <span class="product-category" v-for="tag in slotProps.data.tags">
-                                        {{ tag }},
+                                      <span class="product-category" v-for="(tag, i) in slotProps.data.tags">
+                                        {{ tag }}<a v-if="i != slotProps.data.tags.length - 1">, </a>
                                       </span>
                                   </div>
                                   <!-- <span :class="'product-badge status-' + slotProps.data.inventoryStatus.toLowerCase()">{{ slotProps.data.inventoryStatus }}</span> -->
@@ -70,7 +50,7 @@
                               </div>
                               <div class="product-grid-item-bottom">
                                   <!-- <span class="product-price">${{ slotProps.data.price }}</span> -->
-                                  <Button icon="pi pi-eye"></Button>
+                                  <Button @click="$router.push({ path: `/article/${slotProps.data.id}` })" icon="pi pi-eye" label="Voir"></Button>
                               </div>
                           </div>
                       </div>
@@ -229,6 +209,12 @@ export default {
 .product-category {
   font-weight: 600;
   vertical-align: middle;
+}
+.pi {
+  z-index: 22;
+}
+.grid{
+  place-content: space-between;
 }
 ::v-deep(.product-list-item) {
   display: flex;

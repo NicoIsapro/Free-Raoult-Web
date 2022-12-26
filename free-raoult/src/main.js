@@ -10,11 +10,13 @@ import InputText from 'primevue/inputtext';
 import Chips from 'primevue/chips';
 import Message from 'primevue/message';
 import ToastService from 'primevue/toastservice';
+import Tag from 'primevue/tag';
+import Panel from 'primevue/panel';
 
 import './assets/main.css'
 import 'primevue/resources/primevue.min.css'
 import 'primeicons/primeicons.css'
-import 'primevue/resources/themes/mdc-dark-deeppurple/theme.css'
+import 'primevue/resources/themes/md-dark-indigo/theme.css'
 
 const app = createApp(App)
 app.component('DataView', DataView)
@@ -24,6 +26,8 @@ app.component('Dialog', Dialog)
 app.component('InputText', InputText)
 app.component('Chips', Chips)
 app.component('Message', Message)
+app.component('Tag', Tag)
+app.component('Panel', Panel)
 
 app.use(PrimeVue)
 app.use(router)

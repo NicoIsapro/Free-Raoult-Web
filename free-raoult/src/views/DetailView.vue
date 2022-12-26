@@ -1,13 +1,16 @@
 <template>
     <div>
-        <div class="content-section introduction">
-            <div class="feature-intro">
-                <h1>Liberez-Raoult</h1>
-                <p>Retrouver ici des articles sans censure</p>
-            </div>
-            <!-- <AppDemoActions /> -->
+        <br>
+        <div class="tags">
+          Tags: 
+          <span class="tags" v-for="tag in article.tags">
+            <Tag :value="tag"></Tag>
+          </span>
         </div>
         <br>
+        <Panel :header="article.title">
+          {{article.content}}
+        </Panel>
     </div>
 </template>
   <script>
@@ -36,9 +39,9 @@
       },
       getArticleReq () {
           axios
-            .get(import.meta.env.VITE_API_URL + '/dev/articles/' + id)
+            .get(import.meta.env.VITE_API_URL + '/dev/articles/' + this.$route.params.id)
             .then(response => {
-              this.article = response.data?.article;
+              this.article = response.data;
             })
             .catch(error => console.log(error));
         }
@@ -47,4 +50,10 @@
   </script>
   
   <style lang="scss" scoped>
+  .tags {
+    padding-bottom: 10px;
+  }
+  .p-tag {
+    margin-left: 5px;
+  }
   </style>

@@ -30,6 +30,4 @@ jobs:
           aws-region: eu-west-3
 
       - name: Deploy Content to S3 bucket
-        run: aws s3 sync ./free-raoult/dist s3://liberez-raoult --delete       
-      - name: Invalidate CloudFront
-        uses: chetan/invalidate-cloudfront-action@v2
+        run: aws s3 sync ./free-raoult/dist s3://liberez-raoult --delete
