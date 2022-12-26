@@ -4,7 +4,7 @@ import { RouterLink, RouterView } from 'vue-router'
 
 <template>
   <header>
-    <Message severity="warn">🔥 Une petition pour liberer Sebastien est en cours, allez signer ici</Message>
+    <Message severity="info">🔥 Une petition pour liberer Sebastien est en cours, allez <a href="https://www.change.org/p/justice-pour-sebastien">signer ici</a></Message>
   </header>
 
   <RouterView />
