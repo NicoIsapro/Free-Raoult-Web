@@ -10,7 +10,7 @@
       <br>
       <div class="content-section implementation">
           <div class="card">
-              <DataView v-model:filters="filters" :value="articles" :layout="layout" :paginator="true" :rows="6" :sortOrder="sortOrder" :sortField="sortField">
+              <DataView :value="articlesFiltered" :layout="layout" :paginator="true" :rows="6" :sortOrder="sortOrder" :sortField="sortField">
                   <template #header>
                       <div class="grid grid-nogutter">
                           <div class="col-6" style="text-align: left">
@@ -19,7 +19,9 @@
                           <span class="p-input-icon-left mr-2">
                             <i class="pi pi-search" />
                             <InputText
-                              placeholder="Recherche..."
+                              placeholder="Rechercher par tag..."
+                              @change="searchByTag"
+                              v-model="searchValue"
                             />
                           </span>
                           <Button @click="showNewArticleDialog = true" label="Nouvel article" icon="pi pi-plus" iconPos="right" />
@@ -115,17 +117,17 @@
 
 <script>
 import axios from 'axios'
-import { FilterMatchMode, FilterOperator } from 'primevue/api';
-
 export default {
   data() {
       return {
           articles: [],
+          articlesFiltered: [],
           article: {
             title: null,
             content: null,
             tags: null
           },
+          searchValue: null,
           layout: 'grid',
           sortKey: null,
           submitted: false,
@@ -145,11 +147,19 @@ export default {
     showToast(level, title, content) {
       this.$toast.add({ severity: level, summary: title, detail: content, life: 3000 });
     },
+    searchByTag() {
+      if (this.searchValue.trim() != "" ) {
+        this.articlesFiltered = this.articles.filter((item) => { return item.tags.includes(this.searchValue.trim()) });
+      } else {
+        this.articlesFiltered = this.articles;
+      }
+    },
     getArticlesReq () {
         axios
           .get(import.meta.env.VITE_API_URL + '/dev/articles')
           .then(response => {
             this.articles = response.data?.articles;
+            this.articlesFiltered = this.articles;
           })
           .catch(error => console.log(error));
       },
