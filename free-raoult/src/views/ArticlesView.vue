@@ -144,13 +144,13 @@ export default {
   },
   mounted() {
     this.getArticlesReq();
-    this.userIsAdmin();
   },
   methods: {
     userIsAdmin() {
       const username = this.$cookies.get("CognitoIdentityServiceProvider.55gpklg2dknjb57leqf95ardfh.LastAuthUser");
       const idToken = this.$cookies.get("CognitoIdentityServiceProvider.55gpklg2dknjb57leqf95ardfh." + username + ".idToken");
       const userData = VueJwtDecode.decode(idToken);
+      console.log(userData);
       return userData["cognito:groups"].includes('Administrator');
     },
     showToast(level, title, content) {
