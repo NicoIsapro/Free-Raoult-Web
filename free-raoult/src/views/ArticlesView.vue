@@ -24,7 +24,7 @@
                               v-model="searchValue"
                             />
                           </span>
-                          <Button @click="showNewArticleDialog = true" label="Nouvel article" icon="pi pi-plus" iconPos="right" />
+                          <Button @click="showNewArticleDialog = true" label="Nouvel article" icon="pi pi-plus" iconPos="right" :v-if="userIsAdmin" />
                           <!-- <div class="col-6" style="text-align: right">
                               <DataViewLayoutOptions v-model="layout" />
                           </div> -->
@@ -117,6 +117,8 @@
 
 <script>
 import axios from 'axios'
+import VueJwtDecode from 'vue-jwt-decode'
+
 export default {
   data() {
       return {
@@ -142,8 +144,15 @@ export default {
   },
   mounted() {
     this.getArticlesReq();
+    this.userIsAdmin();
   },
   methods: {
+    userIsAdmin() {
+      const username = this.$cookies.get("CognitoIdentityServiceProvider.55gpklg2dknjb57leqf95ardfh.LastAuthUser");
+      const idToken = this.$cookies.get("CognitoIdentityServiceProvider.55gpklg2dknjb57leqf95ardfh." + username + ".idToken");
+      const userData = VueJwtDecode.decode(idToken);
+      return userData["cognito:groups"].includes('Administrator');
+    },
     showToast(level, title, content) {
       this.$toast.add({ severity: level, summary: title, detail: content, life: 3000 });
     },

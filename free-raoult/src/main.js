@@ -12,6 +12,7 @@ import Message from 'primevue/message';
 import ToastService from 'primevue/toastservice';
 import Tag from 'primevue/tag';
 import Panel from 'primevue/panel';
+import VueCookies from 'vue-cookies';
 
 import './assets/main.css'
 import 'primevue/resources/primevue.min.css'
@@ -32,5 +33,6 @@ app.component('Panel', Panel)
 app.use(PrimeVue)
 app.use(router)
 app.use(ToastService)
+app.use(VueCookies);
 
 app.mount('#app')
