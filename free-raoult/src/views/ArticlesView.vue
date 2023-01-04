@@ -24,7 +24,7 @@
                               v-model="searchValue"
                             />
                           </span>
-                          <Button @click="showNewArticleDialog = true" label="Nouvel article" icon="pi pi-plus" iconPos="right" :v-if="userIsAdmin" />
+                          <Button @click="showNewArticleDialog = true" label="Nouvel article" icon="pi pi-plus" iconPos="right" v-if="userIsAdmin()" />
                           <!-- <div class="col-6" style="text-align: right">
                               <DataViewLayoutOptions v-model="layout" />
                           </div> -->
@@ -220,6 +220,8 @@ export default {
 }
 .product-description {
   margin: 0 0 1rem 0;
+  height: 90px;
+  overflow: hidden;
 }
 .product-category-icon {
   vertical-align: middle;
