@@ -38,8 +38,10 @@
         this.$toast.add({ severity: level, summary: title, detail: content, life: 3000 });
       },
       getArticleReq () {
+          const username = this.$cookies.get("CognitoIdentityServiceProvider.55gpklg2dknjb57leqf95ardfh.LastAuthUser");
+          const idToken = this.$cookies.get("CognitoIdentityServiceProvider.55gpklg2dknjb57leqf95ardfh." + username + ".idToken");
           axios
-            .get(import.meta.env.VITE_API_URL + '/dev/articles/' + this.$route.params.id)
+            .get(import.meta.env.VITE_API_URL + '/dev/articles/' + this.$route.params.id,  { headers: {"Authorization" : idToken } })
             .then(response => {
               this.article = response.data;
             })
