@@ -145,12 +145,11 @@ export default {
   },
   mounted() {
     this.getArticlesReq();
-    const username = this.$cookies.get("CognitoIdentityServiceProvider.55gpklg2dknjb57leqf95ardfh.LastAuthUser");
-    this.idToken = this.$cookies.get("CognitoIdentityServiceProvider.55gpklg2dknjb57leqf95ardfh." + username + ".idToken");
-    axios.defaults.headers.common['Authorization'] = this.idToken;
   },
   methods: {
     userIsAdmin() {
+      const username = this.$cookies.get("CognitoIdentityServiceProvider.55gpklg2dknjb57leqf95ardfh.LastAuthUser");
+      this.idToken = this.$cookies.get("CognitoIdentityServiceProvider.55gpklg2dknjb57leqf95ardfh." + username + ".idToken");
       const userData = VueJwtDecode.decode(this.idToken);
       return userData["cognito:groups"].includes('Administrator');
     },
@@ -166,7 +165,7 @@ export default {
     },
     getArticlesReq () {
         axios
-          .get(import.meta.env.VITE_API_URL + '/dev/articles')
+          .get(import.meta.env.VITE_API_URL + '/dev/articles', { headers: {"Authorization" : this.idToken } })
           .then(response => {
             this.articles = response.data?.articles;
             this.articlesFiltered = this.articles;
@@ -177,7 +176,7 @@ export default {
         this.submitted = true;
         if (this.article.title && this.article.content) {
           axios
-            .post(import.meta.env.VITE_API_URL + '/dev/articles', this.article)
+            .post(import.meta.env.VITE_API_URL + '/dev/articles', this.article, { headers: {"Authorization" : this.idToken } })
             .then(response => {
               if (response.status === 200) {
                 this.showNewArticleDialog = false;
