@@ -131,6 +131,7 @@ export default {
           },
           searchValue: null,
           layout: 'grid',
+          idToken: null,
           sortKey: null,
           submitted: false,
           showNewArticleDialog: false,
@@ -144,13 +145,13 @@ export default {
   },
   mounted() {
     this.getArticlesReq();
+    const username = this.$cookies.get("CognitoIdentityServiceProvider.55gpklg2dknjb57leqf95ardfh.LastAuthUser");
+    this.idToken = this.$cookies.get("CognitoIdentityServiceProvider.55gpklg2dknjb57leqf95ardfh." + username + ".idToken");
+    axios.defaults.headers.common['Authorization'] = this.idToken;
   },
   methods: {
     userIsAdmin() {
-      const username = this.$cookies.get("CognitoIdentityServiceProvider.55gpklg2dknjb57leqf95ardfh.LastAuthUser");
-      const idToken = this.$cookies.get("CognitoIdentityServiceProvider.55gpklg2dknjb57leqf95ardfh." + username + ".idToken");
-      const userData = VueJwtDecode.decode(idToken);
-      console.log(userData);
+      const userData = VueJwtDecode.decode(this.idToken);
       return userData["cognito:groups"].includes('Administrator');
     },
     showToast(level, title, content) {
